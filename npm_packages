@@ -5,6 +5,8 @@ npm 'browserify', require: false, development: true
 # Add some npm packages
 
 npm 'react'
+npm 'react-dom'
 npm 'react-router-dom'
 npm 'sw-precache'
 npm 'sw-toolbox'
+npm 'google-map-react'

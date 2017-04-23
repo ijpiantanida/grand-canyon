@@ -1,13 +1,24 @@
 class MapPage extends Component {
   constructor(props) {
     super(props);
+    this.grandCanyonCenter = {lat: 36.14, lng: -112.24}
+  }
+
+  googleMap() {
+    return (<div className="map__gmap-container">
+      <GoogleMapReact defaultCenter={this.grandCanyonCenter} defaultZoom={10}/>
+    </div>);
+  }
+
+  staticMap() {
+    return <img className="map__static" src="<%= image_url("canyon_map.jpeg") %>"/>;
   }
 
   render() {
-    const imgUrl = (this.props.appState.online ? "<%= image_url("logo_text.png") %>" : "<%= image_url("logo_badge.png") %>");
+    const content = this.props.appState.online ? this.googleMap() : this.staticMap();
 
     return (<div className="map">
-      <img className="map__image" src={imgUrl} />
+      {content}
     </div>);
   }
 }

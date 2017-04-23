@@ -3,6 +3,7 @@ const BrowserRouter = ReactRouterDom.BrowserRouter;
 const Link = ReactRouterDom.Link;
 const Switch = ReactRouterDom.Switch;
 const Route = ReactRouterDom.Route;
+const GoogleMapReact = GoogleMapReact.default;
 
 const RouteWithAppState = ({component: ComponentName, appState, ...rest}) => (
   <Route {...rest} render={(args) => <ComponentName {...args} appState={appState}/>}/>

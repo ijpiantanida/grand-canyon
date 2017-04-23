@@ -1,0 +1,15 @@
+.map {
+  flex: 1;
+  position: relative;
+}
+
+.map__gmap-container {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+
+.map__static {
+  height: 100%;
+  width: 100%;
+}
