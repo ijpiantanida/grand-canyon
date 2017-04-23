@@ -15,3 +15,11 @@
 //= require npm-dependencies
 //= require components
 //= require_tree .
+
+if ('serviceWorker' in navigator) {
+  console.log('Service Worker is supported');
+  navigator.serviceWorker.register('/service-worker.js')
+    .catch(error => console.error('Service Worker Error', error));
+} else {
+  console.warn('Service Workers not supported');
+}

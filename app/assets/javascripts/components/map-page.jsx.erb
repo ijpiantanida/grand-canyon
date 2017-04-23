@@ -4,8 +4,10 @@ class MapPage extends Component {
   }
 
   render() {
+    const imgUrl = (this.props.appState.online ? "<%= image_url("logo_text.png") %>" : "<%= image_url("logo_badge.png") %>");
+
     return (<div className="map">
-      <img className="map__image" src="<%= image_url("logo_text.png") %>" />
+      <img className="map__image" src={imgUrl} />
     </div>);
   }
 }

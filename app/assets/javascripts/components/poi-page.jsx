@@ -26,6 +26,10 @@ class PoiPage extends Component {
   }
 
   render() {
+    if(!this.props.appState.online) {
+      return <OfflineNotice />;
+    }
+
     if(this.state.loading) {
       return <div>Loading POI</div>;
     }
