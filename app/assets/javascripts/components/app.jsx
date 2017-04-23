@@ -4,8 +4,8 @@ const Link = ReactRouterDom.Link;
 const Switch = ReactRouterDom.Switch;
 const Route = ReactRouterDom.Route;
 
-const RouteWithGlobalState = ({component: MyComponent, appState, ...rest}) => (
-  <Route {...rest} render={(args) => <MyComponent {...args} appState={appState} />} />
+const RouteWithAppState = ({component: ComponentName, appState, ...rest}) => (
+  <Route {...rest} render={(args) => <ComponentName {...args} appState={appState}/>}/>
 );
 
 class App extends Component {
@@ -52,9 +52,9 @@ class App extends Component {
             </nav>
 
             <Switch>
-              <Route exact path="/" render={(args) => <HomePage {...args} appState={this.state}/> }/>
-              <Route path="/poi/:id" render={(args) => <PoiPage {...args} appState={this.state}/> }/>
-              <Route exact path="/map" render={(args) => <MapPage {...args} appState={this.state}/> }/>
+              <RouteWithAppState path="/" exact component={HomePage} appState={this.state} />
+              <RouteWithAppState path="/poi/:id" component={PoiPage} appState={this.state} />
+              <RouteWithAppState path="/map" component={MapPage} appState={this.state} />
             </Switch>
           </div>
 
