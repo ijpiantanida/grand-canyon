@@ -1,0 +1,10 @@
+{
+  "short_name": "Grand Canyon",
+  "name": "Grand Canyon Tour",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "blue",
+  "background_color": "blue"
+}
