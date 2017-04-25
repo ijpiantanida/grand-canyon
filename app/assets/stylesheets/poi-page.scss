@@ -1,0 +1,13 @@
+@import 'theme';
+
+.poi__name {
+  background-color: $background-line-color;
+  margin: 0 (-$padding) 10px (-$padding);
+  padding: 5px $padding;
+}
+
+.poi__description {
+  line-height: 1.2;
+  text-align: justify;
+  white-space: pre-line;
+}

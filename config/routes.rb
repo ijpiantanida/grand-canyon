@@ -5,7 +5,6 @@ Rails.application.routes.draw do
     resources :poi
   end
 
-  get "poi/:id", to: "home#home"
-  get "map", to: "home#home"
+  get "*path", to: "home#home"
   root "home#home"
 end

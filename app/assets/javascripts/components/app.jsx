@@ -1,6 +1,6 @@
 const Component = React.Component;
 const BrowserRouter = ReactRouterDom.BrowserRouter;
-const Link = ReactRouterDom.Link;
+const NavLink = ReactRouterDom.NavLink;
 const Switch = ReactRouterDom.Switch;
 const Route = ReactRouterDom.Route;
 const GoogleMapReact = GoogleMapReact.default;
@@ -15,7 +15,6 @@ class App extends Component {
     this.state = {
       online: true
     };
-    this.toggleNetwork = this.toggleNetwork.bind(this);
   }
 
   componentDidMount() {
@@ -24,19 +23,28 @@ class App extends Component {
         console.log("Broadcasted from SW : ", event.data);
 
         const data = event.data;
-        if (data.command == "networkStatus") {
+        if (data.command === "networkStatus") {
           this.setState({online: data.online});
+        }
+
+        if(data.command === "reload") {
+          window.location.reload();
         }
       };
     }
+    window.addEventListener('online',  () => this.toggleNetwork(true));
+    window.addEventListener('offline', () => this.toggleNetwork(false));
   }
 
-  toggleNetwork() {
-    this.setState({online: !this.state.online});
+  toggleNetwork(state) {
+    this.setState({online: state});
   }
 
   render() {
-    const networkStatus = this.state.online ? "ONLINE" : "OFFLINE";
+    let networkStatus;
+    if(!this.state.online) {
+      networkStatus = <span className="app__network-state">OFFLINE</span>;
+    }
 
     return (
       <BrowserRouter>
@@ -46,10 +54,10 @@ class App extends Component {
           </div>
           <div className="app__content">
             <nav className="app__nav">
-              <Link className="nav__item" to="/">POI List</Link>
-              <Link className="nav__item" to="/map">Map</Link>
-              <button className="nav__item" onClick={this.toggleNetwork}>Toggle Network</button>
-              <span className="app__network-state">{networkStatus}</span>
+              <NavLink className="nav__item" to="/" exact activeClassName="nav__item--active" isActive={(match, location) => match || location.pathname.match(/poi/)} >What to visit?</NavLink>
+              <NavLink className="nav__item" to="/map" exact activeClassName="nav__item--active">Map</NavLink>
+              <div className="nav__item-separator" />
+              {networkStatus}
             </nav>
 
             <Switch>

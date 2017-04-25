@@ -1,9 +1,11 @@
-const CACHE_NAME = 'pwa-concept-cache-v2';
-const urlsToCache = [
+const CACHE_NAME = 'pwa-concept-cache-v3';
+const URLS_TO_PRECACHE = [
   "<%= root_url %>",
   "<%= asset_url("application.js") %>",
   "<%= asset_url("application.css") %>",
-  "<%= image_url("canyon_map.jpeg") %>"
+  "<%= asset_url("grand_canyon_background.jpg") %>",
+  "<%= asset_url("canyon_map.jpeg") %>",
+  "<%= asset_path("WorkSans-Regular.ttf") %>"
 ];
 
 self.addEventListener('install', (event) => {
@@ -11,7 +13,7 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        return cache.addAll(urlsToCache);
+        return cache.addAll(URLS_TO_PRECACHE);
       })
       .then(() => self.skipWaiting())
   );
@@ -36,15 +38,22 @@ self.addEventListener('fetch', (event) => {
     return event.respondWith(
       caches.match("/")
         .then(response => {
-          console.log(event.request.url, "was cached");
+          if (!response) {
+            throw "App index not found";
+          }
+          console.log(event.request.url, "was cached", response);
           return response;
-        }).catch(error => myFetch(event.request))
+        }).catch(error => myFetch(event)
+        .then(response => caches.open(CACHE_NAME).then(cache => {
+          cache.put("/", response.clone());
+          return response;
+        })))
     );
   }
 
   if (event.request.url.match(/api\/poi$/)) {
     return event.respondWith(
-      myFetch(event.request)
+      myFetch(event)
         .then(response => caches.open(CACHE_NAME)
           .then(cache => {
             cache.put(event.request, response.clone());
@@ -54,28 +63,31 @@ self.addEventListener('fetch', (event) => {
     );
   }
 
-  if (urlsToCache.find((url) => event.request.url === url)) {
+  if (URLS_TO_PRECACHE.find((url) => event.request.url === url)) {
     return event.respondWith(
       caches.match(event.request)
-        .catch(() => myFetch(event.request))
+        .catch(() => myFetch(event))
     )
   }
 
-  event.respondWith(myFetch(event.request));
+  event.respondWith(myFetch(event));
 });
 
 function broadcastMessage(command, data) {
-  const payload = Object.assign({command: command}, data);
+  const payload = {command: command};
+  if (data) {
+    Object.assign(payload, data);
+  }
   self.clients.matchAll().then(clients =>
     clients.forEach(client => client.postMessage(payload))
   );
 }
 
 let lastReportedOnlineStatus = true;
-function myFetch(request) {
-  return fetch(request)
+function myFetch(event) {
+  return fetch(event.request)
     .then((response) => {
-      if(!lastReportedOnlineStatus) {
+      if (!lastReportedOnlineStatus) {
         lastReportedOnlineStatus = true;
         broadcastMessage("networkStatus", {online: true});
       }
@@ -86,4 +98,28 @@ function myFetch(request) {
       broadcastMessage("networkStatus", {online: false});
       throw error;
     })
+    .then(response => {
+      if (!event.request.url.match(/assets/)) {
+        return response;
+      }
+      if (response.status >= 400 && response.status < 500) {
+        return caches.open(CACHE_NAME)
+          .then(cache => cache.delete("/"))
+          .then(() => broadcastMessage("reload"))
+          .then(() => response);
+      }
+      return response;
+    })
 }
+
+
+self.addEventListener('fetch', (event) => {
+  const requestIsHtml = event.request.method === 'GET' &&
+    event.request.headers.get('accept').includes('text/html');
+  if (requestIsHtml) {
+    return event.respondWith(
+      fetch(event.request)
+        .catch(() => caches.match("/offline.html"))
+    );
+  }
+});

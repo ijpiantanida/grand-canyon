@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>GrandCanyon</title>
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="white">
     <link rel="manifest" href="<%= asset_path("app-manifest.json") %>">
+    <title>Grand Canyon Tour</title>
 
     <%= stylesheet_link_tag    'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
@@ -14,4 +13,6 @@
   <body>
     <%= yield %>
   </body>
+
+  <link rel="manifest" href="/manifest.json">
 </html>

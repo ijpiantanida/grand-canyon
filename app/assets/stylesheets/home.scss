@@ -1,3 +1,23 @@
+@import 'theme';
+
 .home__title {
   margin-bottom: 10px;
+}
+
+.home__description {
+  background-color: $background-line-color;
+  line-height: 1.2;
+  margin: 0 (-$padding) 10px (-$padding);
+  padding: $padding;
+  text-align: justify;
+}
+
+.home__poi-list {
+  list-style-type: circle;
+  list-style-position: inside;
+}
+
+.home__poi-list-item {
+  color: #6d1515;
+  margin-bottom: 5px;
 }

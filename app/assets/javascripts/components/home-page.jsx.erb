@@ -19,13 +19,20 @@ class HomePage extends Component {
     if (this.state.loading) {
       content = <div className="loader">Loading POIs</div>;
     } else {
-      const poiEls = this.state.poi.map(poi => <PoiLink key={poi.id} poi={poi} />);
-      content = (<div className="home__poi-list">
+      const poiEls = this.state.poi.map(poi => (
+          <li key={poi.id} className="home__poi-list-item">
+            <PoiLink poi={poi}/>
+          </li>
+      ));
+      content = (<ul className="home__poi-list">
         {poiEls}
-      </div>);
+      </ul>);
     }
 
     return (<div className="home">
+      <div className="home__description">
+        The Grand Canyon of the Colorado River is a mile-deep canyon (1.6 km) that bisects the park. Even though the average distance across the canyon is only 10 miles/ 16 km, it takes 5 hours to drive the 215 miles / 346 km between the park's South Rim Village and the North Rim Village.
+      </div>
       <h2 className="home__title">Points of Interest</h2>
       {content}
     </div>)
