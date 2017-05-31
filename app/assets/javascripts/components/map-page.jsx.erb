@@ -6,7 +6,13 @@ class MapPage extends Component {
 
   googleMap() {
     return (<div className="map__gmap-container">
-      <GoogleMapReact defaultCenter={this.grandCanyonCenter} defaultZoom={10}/>
+      <GoogleMapReact
+          defaultCenter={this.grandCanyonCenter}
+          defaultZoom={10}
+          bootstrapURLKeys={{
+            key: "<%= ENV["GMAPS_API_KEY"] %>"
+          }}
+      />
     </div>);
   }
 
